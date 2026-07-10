@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract AdvancedStorage {
+    address public owner;
+    uint256 private storedNumber;
+
+    event NumberUpdated(uint256 newValue);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can modify the number");
+        _;
+    }
+
+    function store(uint256 _number) external onlyOwner {
+        storedNumber = _number;
+        emit NumberUpdated(_number);
+    }
+
+    function get() external view returns (uint256) {
+        return storedNumber;
+    }
+
+    function increment() external onlyOwner {
+        unchecked {
+            storedNumber++;
+        }
+
+        emit NumberUpdated(storedNumber);
+    }
+
+    function decrement() external onlyOwner {
+        require(storedNumber > 0, "Number cannot go below zero");
+
+        unchecked {
+            storedNumber--;
+        }
+
+        emit NumberUpdated(storedNumber);
+    }
+}
