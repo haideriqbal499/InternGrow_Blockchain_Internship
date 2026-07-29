@@ -1,49 +1,28 @@
-# Task 3 — Decentralized Autonomous Voting (DAO)
+# Task 3 — Decentralized Autonomous Voting
 
-Multi-poll voting with **block-timestamp deadlines**, **one vote per wallet per poll**, and **token-weighted** tallies from locked ETH.
+LockVote is a permissionless, token-weighted DAO polling contract with a responsive MetaMask interface.
 
-## Core features
+## Governance rules
 
-- `createPoll(question, durationInMinutes)` → returns `(pollId, deadline)`
-- `vote(pollId, support)` — one vote per address; weight = locked balance
-- `finalizePoll(pollId)` — locks outcome after deadline
-- `getResults` / `getVoterInfo` / `isPollActive`
+- Voting power equals the caller's locked ERC-20 governance tokens
+- One vote per wallet for each poll
+- Tokens used for voting remain locked through that poll's deadline
+- Deadlines are enforced using block numbers
+- Any token locker can create a poll with 2–10 choices
+- Anyone can finalize an expired poll
+- Poll state, option totals and voting history are stored in secure mappings
+- Reentrancy protection and checked ERC-20 transfers protect token custody
 
-## Upgrade feature — token-weighted voting
+`TestGovernanceToken.sol` is included for test networks. Its deployer receives 1,000,000 TEST tokens.
 
-- `lockTokens()` payable — stake ETH for voting power
-- Vote weight = locked balance
-- `unlockTokens(amount)` returns stake (past votes stay counted)
+## GUI
 
-## Remix expected output
+The complete Task 3 interface is in `../DApp-GUI/`.
 
-1. Account A: `lockTokens` Value = `2 ether` → `newBalance: 2000000000000000000`
-2. Account B: `lockTokens` Value = `1 ether` → `newBalance: 1000000000000000000`
-3. Owner: `createPoll("Ship upgrade?", 1)` →
-   ```text
-   pollId: 0
-   deadline: <timestamp>
-   ```
-4. A: `vote(0, true)` →
-   ```text
-   weight: 2000000000000000000
-   yesVotes: 2000000000000000000
-   noVotes: 0
-   ```
-5. B: `vote(0, false)` →
-   ```text
-   weight: 1000000000000000000
-   yesVotes: 2000000000000000000
-   noVotes: 1000000000000000000
-   ```
-6. After deadline: `finalizePoll(0)` →
-   ```text
-   yesVotes: 2000000000000000000
-   noVotes: 1000000000000000000
-   outcome: "YES_WINS"
-   ```
-7. `getResults(0)` → `status: "finalized"`, `leadingSide: "YES"`
+```powershell
+cd DApp-GUI
+npm.cmd install
+npm.cmd run dev
+```
 
-## File
-
-- `DAOVoting.sol`
+Open `http://127.0.0.1:5173/dao-voting.html`, connect MetaMask on Sepolia or another test network, and select **Deploy 1,000,000 TEST**.

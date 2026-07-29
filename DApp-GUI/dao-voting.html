@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090b16" />
+    <meta name="description" content="Token-locked, block-enforced decentralized voting" />
+    <title>LockVote — DAO Governance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="glow glow-a"></div><div class="glow glow-b"></div>
+    <main class="shell">
+      <nav>
+        <a class="brand" href="/dao-voting.html"><span class="brand-mark">L</span><span>lockvote</span><em>DAO</em></a>
+        <div class="nav-right">
+          <span id="networkLabel" class="network"><i></i> Wallet offline</span>
+          <button id="connectButton" class="wallet-button">Connect wallet <b>↗</b></button>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <div>
+          <p class="eyebrow">TOKEN-LOCKED GOVERNANCE</p>
+          <h1>Conviction has<br /><em>measurable weight.</em></h1>
+        </div>
+        <p>Permissionless polls, one wallet per vote, and block-enforced deadlines. Voting power equals governance tokens locked in the contract.</p>
+      </header>
+
+      <section id="setupPanel" class="setup-panel">
+        <div class="setup-title"><span>01</span><div><h2>Launch or join a DAO</h2><p>Deploy with an ERC-20 governance token, or attach an existing LockVote contract.</p></div></div>
+        <div class="setup-controls">
+          <label for="deployToken">GOVERNANCE TOKEN ADDRESS</label>
+          <div class="input-action"><input id="deployToken" placeholder="0x token contract" spellcheck="false" /><button id="deployButton" disabled>Deploy DAO</button></div>
+          <div class="test-token-row"><span>Need a token for testing?</span><button id="deployTestTokenButton" disabled>Deploy 1,000,000 TEST</button></div>
+          <div class="divider"><span>OR ATTACH EXISTING</span></div>
+          <div class="input-action"><input id="daoAddress" placeholder="0x DAO contract" spellcheck="false" /><button id="attachButton" class="secondary">Attach</button></div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="hidden">
+        <div class="status-strip">
+          <div><span>DAO CONTRACT</span><button id="copyDao" class="address-button">—</button></div>
+          <div><span>CURRENT BLOCK</span><strong id="currentBlock">—</strong></div>
+          <div><span>VOTING ASSET</span><strong id="tokenSymbol">TOKEN</strong></div>
+          <button id="refreshButton" class="refresh-button">↻ Refresh</button>
+        </div>
+
+        <div class="dashboard-grid">
+          <aside class="left-column">
+            <section class="card balance-card">
+              <div class="card-heading"><span class="number">01</span><div><p class="overline">YOUR VOTING POWER</p><h2><strong id="lockedAmount">0</strong> <span id="lockedSymbol">TOKEN</span></h2></div></div>
+              <dl>
+                <div><dt>Wallet balance</dt><dd id="walletBalance">0</dd></div>
+                <div><dt>Approved</dt><dd id="approvedAmount">0</dd></div>
+                <div><dt>Committed until</dt><dd id="unlockAt">Not committed</dd></div>
+              </dl>
+              <label for="lockAmount">TOKEN AMOUNT</label>
+              <div class="amount-row"><input id="lockAmount" inputmode="decimal" placeholder="0.0" /><button id="maxButton">MAX</button></div>
+              <div class="button-pair"><button id="lockButton" class="primary" disabled>Approve & lock</button><button id="unlockButton" class="secondary" disabled>Unlock</button></div>
+              <p class="fine-print">Tokens used to vote cannot be unlocked until that poll's deadline has passed.</p>
+            </section>
+
+            <section class="card create-card">
+              <div class="card-heading"><span class="number">02</span><div><p class="overline">CREATE A POLL</p><h3>Open a proposal</h3></div></div>
+              <label for="pollTitle">TITLE</label><input id="pollTitle" maxlength="120" placeholder="Treasury allocation Q3" />
+              <label for="pollDescription">DESCRIPTION</label><textarea id="pollDescription" maxlength="1200" rows="4" placeholder="Explain what the community is deciding…"></textarea>
+              <label for="pollOptions">OPTIONS <span>one per line, 2–10</span></label><textarea id="pollOptions" rows="4" placeholder="Fund the proposal&#10;Reject the proposal"></textarea>
+              <label for="durationBlocks">DURATION IN BLOCKS</label><input id="durationBlocks" type="number" min="1" max="1000000" value="100" />
+              <button id="createPollButton" class="primary wide" disabled>Create poll <span>→</span></button>
+              <p class="fine-print">Any wallet with locked tokens can create a poll.</p>
+            </section>
+          </aside>
+
+          <section class="polls-section">
+            <div class="polls-heading">
+              <div><p class="overline">COMMUNITY DECISIONS</p><h2>Polls</h2></div>
+              <div class="filter-tabs"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="open">Open</button><button class="filter" data-filter="closed">Closed</button></div>
+            </div>
+            <div id="pollList" class="poll-list"><div class="empty-state"><span>◇</span><h3>No polls yet</h3><p>Lock tokens and open the first community decision.</p></div></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"><span id="toastIcon">✓</span><div><strong id="toastTitle"></strong><p id="toastMessage"></p></div></div>
+    <script type="module" src="/src/dao-voting.js"></script>
+  </body>
+</html>

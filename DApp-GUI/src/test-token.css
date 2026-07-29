@@ -1,0 +1,21 @@
+.test-token-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 9px;
+  color: #777d94;
+  font-size: 9px;
+}
+
+.test-token-row button {
+  border: 0;
+  background: none;
+  color: var(--cyan);
+  font: 700 9px "Manrope";
+  cursor: pointer;
+}
+
+.test-token-row button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

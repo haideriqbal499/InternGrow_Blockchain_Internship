@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07100e" />
+    <meta name="description" content="Gas-aware ETH and ERC-20 multi-send dApp" />
+    <title>Airflow — Token Multi-Send</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <main class="shell">
+      <nav>
+        <a class="brand" href="#"><span class="brand-mark">A</span><span>airflow</span><em>multisend</em></a>
+        <div class="nav-actions">
+          <div class="network"><i></i><span id="networkName">Wallet offline</span></div>
+          <button id="connectButton" class="wallet-button"><span id="walletLabel">Connect wallet</span><b>↗</b></button>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <div><div class="kicker"><span>✦</span> ONE TRANSACTION. EVERY WALLET.</div><h1>Move assets<br /><em>at the speed of flow.</em></h1></div>
+        <p>Distribute ETH or ERC-20 tokens equally to up to 200 wallets—validated, atomic, and gas-aware.</p>
+      </header>
+
+      <section id="setupPanel" class="setup-card">
+        <div class="setup-copy"><span class="step">01</span><div><h2>Choose your contract</h2><p>Deploy a fresh Airflow contract or connect an existing one on this network.</p></div></div>
+        <div class="setup-actions">
+          <button id="deployButton" class="primary" disabled>Deploy contract <span>↗</span></button>
+          <span class="or">OR</span>
+          <div class="attach-row"><input id="contractAddress" placeholder="0x contract address" spellcheck="false"/><button id="attachButton" class="secondary">Attach</button></div>
+        </div>
+      </section>
+
+      <section id="appPanel" class="app-grid hidden">
+        <div class="composer card">
+          <div class="card-top"><div><span class="section-number">01</span><p class="overline">BUILD YOUR DROP</p></div><span id="contractBadge" class="contract-badge">CONTRACT LIVE</span></div>
+
+          <div class="mode-tabs" role="tablist">
+            <button class="mode-tab active" data-mode="eth" role="tab"><span class="asset-icon eth-icon">◆</span><span><strong>Native ETH</strong><small>Send network currency</small></span><b>✓</b></button>
+            <button class="mode-tab" data-mode="token" role="tab"><span class="asset-icon token-icon">T</span><span><strong>ERC-20 token</strong><small>Send any standard token</small></span><b>✓</b></button>
+          </div>
+
+          <div id="tokenField" class="field hidden">
+            <label for="tokenAddress">TOKEN CONTRACT</label>
+            <div class="token-input"><input id="tokenAddress" placeholder="0x token contract" spellcheck="false"/><span id="tokenSymbol">ERC-20</span></div>
+            <p id="tokenHint" class="field-hint">Enter a token address to read its symbol, decimals, balance, and allowance.</p>
+          </div>
+
+          <div class="field recipients-field">
+            <div class="label-row"><label for="recipientInput">RECIPIENT WALLETS</label><span id="recipientCount">0 / 200</span></div>
+            <textarea id="recipientInput" rows="8" spellcheck="false" placeholder="Paste wallet addresses here&#10;0x742d...44e&#10;0x8ba1...ba72&#10;&#10;Separate with a new line, comma, or space."></textarea>
+            <div id="validationLine" class="validation-line"><span>○</span> Waiting for recipient addresses</div>
+          </div>
+
+          <div class="field">
+            <label for="totalAmount">TOTAL AMOUNT TO DISTRIBUTE</label>
+            <div class="amount-input"><input id="totalAmount" inputmode="decimal" placeholder="0.00"/><span id="amountSymbol">ETH</span></div>
+            <div class="split-line"><span>Equal split per wallet</span><strong id="perRecipient">—</strong></div>
+          </div>
+
+          <div class="safety-row"><span class="shield">◇</span><div><strong>Atomic protection enabled</strong><p>The entire transaction reverts if any transfer fails. Nothing is partially sent.</p></div></div>
+          <button id="approveButton" class="approve-button hidden" disabled>Approve token spending</button>
+          <button id="sendButton" class="send-button" disabled><span id="sendButtonText">Review & send airdrop</span><b>→</b></button>
+        </div>
+
+        <aside>
+          <div class="summary card">
+            <div class="card-top"><div><span class="section-number">02</span><p class="overline">TRANSACTION PREVIEW</p></div><button id="refreshButton" class="icon-button" title="Refresh">↻</button></div>
+            <div class="flow-visual">
+              <div class="source-node"><span id="sourceInitial">W</span><i></i></div><div class="flow-line"><i></i><i></i><i></i></div><div class="recipient-stack"><span></span><span></span><span>+<b id="stackCount">0</b></span></div>
+            </div>
+            <dl class="summary-list">
+              <div><dt>Asset</dt><dd id="summaryAsset"><span class="mini-asset">◆</span> Native ETH</dd></div>
+              <div><dt>Recipients</dt><dd id="summaryRecipients">0 wallets</dd></div>
+              <div><dt>Per recipient</dt><dd id="summaryPer">—</dd></div>
+              <div><dt>Total distributed</dt><dd id="summaryTotal">—</dd></div>
+            </dl>
+            <div class="gas-box"><span>⌁</span><div><small>ESTIMATED NETWORK GAS</small><strong id="gasEstimate">Complete the form</strong></div></div>
+          </div>
+
+          <div class="stats card">
+            <p class="overline">CONTRACT ACTIVITY</p>
+            <div class="stat-grid"><div><strong id="dropCount">0</strong><span>AIRDROPS</span></div><div><strong id="ethVolume">0</strong><span>ETH SENT</span></div></div>
+            <div class="contract-row"><span><i></i> ATTACHED CONTRACT</span><button id="copyContract" class="mono">—</button></div>
+          </div>
+        </aside>
+
+        <div class="activity card">
+          <div class="card-top"><div><span class="section-number">03</span><p class="overline">RECENT AIRDROPS</p></div><span class="muted">Latest 5,000 blocks</span></div>
+          <div id="activityList" class="activity-list"><p class="empty">Your completed distributions will appear here.</p></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"><span id="toastIcon">✓</span><div><strong id="toastTitle"></strong><p id="toastMessage"></p></div></div>
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>

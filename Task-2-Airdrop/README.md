@@ -1,44 +1,27 @@
 # Task 2 — Automated Token Airdrop & Multi-Send
 
-Payable contract that distributes **ETH or ERC-20 tokens** to many addresses in one transaction.
+A hardened payable contract and MetaMask GUI for distributing ETH or ERC-20 tokens equally to many recipients in one atomic transaction.
 
-## Core features
+## Security and gas features
 
-- `airdropEth(recipients)` — equal ETH split
-- `airdropToken(token, recipients, totalAmount)` — equal ERC-20 split
-- `multiSendEth(recipients, amounts)` — custom amounts
-- Dust refund + reentrancy guard
+- Maximum 200 recipients per batch
+- Full recipient validation before transfers
+- Atomic execution: any failed transfer reverts the complete batch
+- Reentrancy protection for ETH and token paths
+- ERC-20 balance and allowance verification
+- Compatibility with tokens that return `true` or no transfer data
+- Direct `transferFrom` from sender to recipients
+- Exact equal splits with ETH dust refunds
+- Unchecked loop increments and cached lengths
 
-## Upgrade feature — gas efficiency + fail-safes
+## GUI
 
-- Unchecked loop counters
-- Low-level `call` with success verification (`TransferFailed(index)`)
-- Zero-address / zero-amount checks
+The complete Task 2 interface is in `../DApp-GUI/`.
 
-## Remix expected output
-
-### Preview (no ETH sent)
-`previewEqualSplit(3000000000000000000, 3)` →
-```text
-amountPerRecipient: 1000000000000000000
-remainder: 0
+```powershell
+cd DApp-GUI
+npm.cmd install
+npm.cmd run dev
 ```
 
-### Equal ETH airdrop
-Call `airdropEth` with 3 addresses, Value = `0.3 ether`:
-
-```text
-amountPer: 100000000000000000   // 0.1 ETH each
-refund: 0
-```
-
-`getStatus()` afterwards:
-```text
-ethDistributed: 300000000000000000
-airdropCount: 1
-contractBalance: 0
-```
-
-## File
-
-- `Airdrop.sol`
+Open `http://127.0.0.1:5173/`.
